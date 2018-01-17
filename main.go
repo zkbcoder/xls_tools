@@ -11,6 +11,12 @@ import (
 
 func main() {
 
+	dir, _ := os.Getwd()
+	err := os.MkdirAll(dir+"/out", os.ModePerm)  //生成out目录
+	if err != nil {
+	    fmt.Println(err)
+	}
+
 	//	获取配置表目录下所有文件
 	dir_list, e := ioutil.ReadDir("excel")
 	if e != nil {
@@ -62,7 +68,7 @@ func main() {
 
 				if 0 == index { // 第一行字段名
 					for i := 0; i < len(row.Cells); i++ {
-						fieldName, _ := row.Cells[i].String()
+						fieldName := row.Cells[i].String()
 						fields = append(fields, fieldName)
 					}
 					fmt.Println(fields)
@@ -75,7 +81,7 @@ func main() {
 				}
 				if 2 == index {
 					for i := 0; i < len(row.Cells); i++ {
-						t, _ := row.Cells[i].String()
+						t := row.Cells[i].String()
 						fieldTypes = append(fieldTypes, t)
 					}
 					fmt.Println(fieldTypes)
@@ -84,7 +90,7 @@ func main() {
 				}
 				if 3 == index {
 					for i := 0; i < len(row.Cells); i++ {
-						str, _ := row.Cells[i].String()
+						str := row.Cells[i].String()
 						exStrs = append(exStrs, str)
 					}
 					fmt.Println(exStrs)
@@ -112,7 +118,7 @@ func main() {
 						nVal, _ := row.Cells[i].Int()
 						js = fmt.Sprintf("%s%s\"%s\":%d%s%s", js, exFront, fields[i], nVal, endFlag, exAfter)
 					} else if "string" == fieldTypes[i] {
-						strVal, _ := row.Cells[i].String()
+						strVal := row.Cells[i].String()
 						js = fmt.Sprintf("%s%s\"%s\":\"%s\"%s%s", js, exFront, fields[i], strVal, endFlag, exAfter)
 					}
 				}
