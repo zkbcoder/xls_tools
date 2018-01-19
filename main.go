@@ -110,6 +110,9 @@ func main() {
 					if strings.HasSuffix(exStrs[i], "}") {
 						exAfter = exStrs[i] + ","
 						endFlag = ""
+					} else if strings.HasSuffix(exStrs[i], "}]") {
+						exAfter = exStrs[i]
+						endFlag = ""
 					} else {
 						exFront = exStrs[i]
 					}
