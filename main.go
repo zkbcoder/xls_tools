@@ -12,9 +12,9 @@ import (
 func main() {
 
 	dir, _ := os.Getwd()
-	err := os.MkdirAll(dir+"/out", os.ModePerm)  //生成out目录
+	err := os.MkdirAll(dir+"/out", os.ModePerm) //生成out目录
 	if err != nil {
-	    fmt.Println(err)
+		fmt.Println(err)
 	}
 
 	//	获取配置表目录下所有文件
@@ -123,6 +123,9 @@ func main() {
 					} else if "string" == fieldTypes[i] {
 						strVal := row.Cells[i].String()
 						js = fmt.Sprintf("%s%s\"%s\":\"%s\"%s%s", js, exFront, fields[i], strVal, endFlag, exAfter)
+					} else if "array" == fieldTypes[i] {
+						strVal := row.Cells[i].String()
+						js = fmt.Sprintf("%s%s\"%s\":%s%s%s", js, exFront, fields[i], strVal, endFlag, exAfter)
 					}
 				}
 				var content string
