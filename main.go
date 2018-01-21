@@ -24,7 +24,7 @@ func main() {
 		return
 	}
 
-	fmt.Println((dir_list))
+	//	fmt.Println((dir_list))
 	for _, v := range dir_list {
 		xlsfileName := v.Name()
 		if strings.HasPrefix(xlsfileName, ".") { // 去掉隐藏文件
@@ -42,7 +42,7 @@ func main() {
 
 		strXlsxName := v.Name()
 		strXlsxName = strXlsxName[:len(strXlsxName)-5]
-		fmt.Println(strXlsxName)
+		//		fmt.Println(strXlsxName)
 		for _, sheet := range xlFile.Sheets {
 			//			if sheet.Name == "hero" {
 			fileName := fmt.Sprintf("out/%s.json", strXlsxName)
@@ -60,11 +60,9 @@ func main() {
 			fieldTypes := []string{} // 字段类型
 			exStrs := []string{}     // 额外字符串[拼json用]
 
+			//			fmt.Println("--->", len(row.Cells))
 			for index, row := range sheet.Rows {
 				js := ""
-				if len(row.Cells) <= 0 {
-					break
-				}
 
 				if 0 == index { // 第一行字段名
 					for i := 0; i < len(row.Cells); i++ {
@@ -72,11 +70,10 @@ func main() {
 						fields = append(fields, fieldName)
 					}
 					fmt.Println(fields)
-					fmt.Println("init field!!")
 					continue
 				}
 				if 1 == index {
-					fmt.Println("pass by log!!!") // 留给注释用
+					//					fmt.Println("pass by log!!!") // 留给注释用
 					continue
 				}
 				if 2 == index {
@@ -85,7 +82,6 @@ func main() {
 						fieldTypes = append(fieldTypes, t)
 					}
 					fmt.Println(fieldTypes)
-					fmt.Println("init fieldTypes!!")
 					continue
 				}
 				if 3 == index {
@@ -93,9 +89,19 @@ func main() {
 						str := row.Cells[i].String()
 						exStrs = append(exStrs, str)
 					}
-					fmt.Println(exStrs)
-					fmt.Println("init exStrs!!")
+					fieldLen := len(fields)
+					exLen := len(exStrs)
+					if fieldLen > exLen {
+						for i := 0; i < fieldLen-exLen; i++ {
+							exStrs = append(exStrs, "")
+						}
+					}
+					//					fmt.Println(exStrs)
 					continue
+				}
+
+				if len(row.Cells) <= 0 {
+					break
 				}
 
 				key, _ := row.Cells[0].Int() // 做为索引
@@ -134,7 +140,7 @@ func main() {
 				} else {
 					content = fmt.Sprintf(",\n\"%d\" : {%s}", key, js)
 				}
-				fmt.Println(content)
+				//				fmt.Println(content)
 				file.Write([]byte(content))
 			}
 
