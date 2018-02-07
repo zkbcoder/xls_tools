@@ -61,11 +61,13 @@ func main() {
 			exStrs := []string{}     // 额外字符串[拼json用]
 
 			//			fmt.Println("--->", len(row.Cells))
+			rowNum := 0
 			for index, row := range sheet.Rows {
 				js := ""
 
 				if 0 == index { // 第一行字段名
-					for i := 0; i < len(row.Cells); i++ {
+					rowNum = len(row.Cells) // 第一行给赋值
+					for i := 0; i < rowNum; i++ {
 						fieldName := row.Cells[i].String()
 						fields = append(fields, fieldName)
 					}
@@ -77,7 +79,7 @@ func main() {
 					continue
 				}
 				if 2 == index {
-					for i := 0; i < len(row.Cells); i++ {
+					for i := 0; i < rowNum; i++ {
 						t := row.Cells[i].String()
 						fieldTypes = append(fieldTypes, t)
 					}
@@ -105,9 +107,9 @@ func main() {
 				}
 
 				key, _ := row.Cells[0].Int() // 做为索引
-				for i := 0; i < len(row.Cells); i++ {
+				for i := 0; i < rowNum; i++ {
 					endFlag := ","
-					if i+1 == len(row.Cells) {
+					if i+1 == rowNum {
 						endFlag = ""
 					}
 					// 前缀和后缀补充
@@ -123,14 +125,22 @@ func main() {
 						exFront = exStrs[i]
 					}
 
+					nVal := -1
+					strVal := ""
 					if "int" == fieldTypes[i] {
-						nVal, _ := row.Cells[i].Int()
+						if i < len(row.Cells) {
+							nVal, _ = row.Cells[i].Int()
+						}
 						js = fmt.Sprintf("%s%s\"%s\":%d%s%s", js, exFront, fields[i], nVal, endFlag, exAfter)
 					} else if "string" == fieldTypes[i] {
-						strVal := row.Cells[i].String()
+						if i < len(row.Cells) {
+							strVal = row.Cells[i].String()
+						}
 						js = fmt.Sprintf("%s%s\"%s\":\"%s\"%s%s", js, exFront, fields[i], strVal, endFlag, exAfter)
 					} else if "array" == fieldTypes[i] {
-						strVal := row.Cells[i].String()
+						if i < len(row.Cells) {
+							strVal = row.Cells[i].String()
+						}
 						js = fmt.Sprintf("%s%s\"%s\":%s%s%s", js, exFront, fields[i], strVal, endFlag, exAfter)
 					}
 				}
