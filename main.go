@@ -116,7 +116,12 @@ func main() {
 					exFront := "" // 额外向前补充
 					exAfter := "" // 额外向后补充
 					if strings.HasSuffix(exStrs[i], "}") {
-						exAfter = exStrs[i] + ","
+						if i+1 == rowNum {
+							exAfter = exStrs[i] // 最后一列的话不加扣号
+						} else {
+							exAfter = exStrs[i] + ","
+						}
+
 						endFlag = ""
 					} else if strings.HasSuffix(exStrs[i], "}]") {
 						exAfter = exStrs[i]
